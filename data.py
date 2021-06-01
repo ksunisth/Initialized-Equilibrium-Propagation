@@ -33,7 +33,8 @@ def load_data(train_ratio):
     return train, val, test
 
 
+
 if __name__=="__main__":
     train, val, test = load_data(0.7)
-    im = Image.fromarray(train[0][0,:,:] * -1 + 256)
+    im = Image.fromarray(test[0][0,:,:] * -1 + 256)
     im.show()
