@@ -17,9 +17,22 @@ class Equilibrium:
         self.input_dim = shape[0]
         self.state = [np.zeros(shape[i]) for i in range(1, len(shape))]
         self.weights = self.init_weights(shape)
-        self.activation = lambda x: max(0, min(1, x))
-        self.activation_grad = lambda x: 1 if 0 <= x <= 1 else 0
-        
+
+    @staticmethod
+    def rho(v):
+        """
+        activation function to be used
+        """
+        t = np.clip(v, 0, 1)
+        return t
+
+    @staticmethod
+    def rhophrime(v):
+        """
+        gradient of activation function
+        """
+        v = np.asarray(v)
+        return ((v >= 0) & (v <= 1)).astype(int)
 
     def init_weights(self, shape: np.ndarray):
         """
@@ -27,7 +40,7 @@ class Equilibrium:
         """
         weight_shape = tuple([(shape[i + 1], shape[i] + 1) for i in range(len(shape) - 1)])
 
-        # TODO: initialize using Glorot
+        # TODO: #3 initialize using Glorot
 
         return [np.zeros(weight_shape[i]) for i in range(len(weight_shape))]
 
@@ -56,12 +69,10 @@ class Equilibrium:
         returns energy of the net
         """
         magnitudes = sum([np.sum(state ** 2) for state in self.state]) / 2
-        
-        # TODO: configure to apply element wise
 
-        activations = [x] + [self.activation(self.state[i]) for i in range(len(self.state))]
+        activations = rho(self.state)
 
-        # TODO: compute product of activations with weights (refer to original code)
+        # TODO: #5 compute product of activations with weights (refer to original code)
 
         return magnitudes
 
@@ -69,7 +80,7 @@ class Equilibrium:
         """
         returns the gradient of energy function evaluated at current state
         """
-        # TODO: work out by hand (refer to original code)
+        # TODO: #6 work out by hand (refer to original code)
 
         return 0
 
@@ -77,7 +88,7 @@ class Equilibrium:
         """
         returns the gradient of energy function evaluated at current state
         """
-        # TODO: work out by hand (refer to original code)
+        # TODO: #7 work out by hand (refer to original code)
 
         return 0
 
@@ -94,11 +105,14 @@ class Initialize:
     """
 
     def __init__(self):
-        self.activation = lambda x: max(0, min(1, x)) + 0.01 * x
-        self.activation = lambda x: 1 if 0 <= x <= 1 else 0.01
+        pass
     
     def evaluate(self):
         """
         returns output of the net
         """
         return 0
+
+if __name__ == "__main":
+    import doctest
+    doctest.testmod
