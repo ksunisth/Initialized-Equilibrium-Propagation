@@ -102,4 +102,3 @@ class Initialize:
         returns output of the net
         """
         return 0
-
