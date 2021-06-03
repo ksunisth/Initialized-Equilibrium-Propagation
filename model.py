@@ -51,8 +51,6 @@ class Equilibrium:
         weight_shape = zip(shape[:-1], shape[1:])
         return [get_initialized_layer(n_in, n_out) for n_in, n_out in weight_shape]
 
-        return [np.zeros(weight_shape[i]) for i in range(len(weight_shape))]
-
     def outputs(self):
         """
         returns output of the net
