@@ -34,13 +34,22 @@ class Equilibrium:
         v = np.asarray(v)
         return ((v >= 0) & (v <= 1)).astype(int)
 
-    def init_weights(self, shape: np.ndarray):
+    @staticmethod
+    def init_weights(shape: np.ndarray):
         """
         initialize weights acc to Glorot initialization
         """
-        weight_shape = tuple([(shape[i + 1], shape[i] + 1) for i in range(len(shape) - 1)])
+        def get_initialized_layer(n_in, n_out):
+            """
+            perform Glorot initialization of a single layer of the net
+            input dim: n_in
+            output dim: n_out
+            """
+            rng = np.random.RandomState()
+            return np.asarray(np.random.uniform(-np.sqrt(6 / (n_in + n_out)), np.sqrt(6 / (n_in + n_out)), (n_in, n_out)))
 
-        # TODO: #3 initialize using Glorot
+        weight_shape = zip(shape[:-1], shape[1:])
+        return [get_initialized_layer(n_in, n_out) for n_in, n_out in weight_shape]
 
         return [np.zeros(weight_shape[i]) for i in range(len(weight_shape))]
 
