@@ -16,6 +16,7 @@ class Equilibrium:
         """
         self.input_dim = shape[0]
         self.state = [np.zeros(shape[i]) for i in range(1, len(shape))]
+        self.bias = [np.zeros(shape[i]) for i in range(1, len(shape))]
         self.weights = self.init_weights(shape)
 
     @staticmethod
@@ -75,13 +76,20 @@ class Equilibrium:
         """
         returns energy of the net
         """
-        magnitudes = sum([np.sum(state ** 2) for state in self.state]) / 2
+        activations = [self.rho(i) for i in self.state]
+        ret = sum([np.sum(state ** 2) for state in self.state])
+        for i in range(len(activations) - 1):
+            state = activations[i]
+            next_state = activations[i + 1]
+            ret += 2 * np.dot(np.dot(self.weights[i], state), next_state)
+        for j in range(len(activations)):
+            state = activations[j]
+            next_state = activations[j + 1]
+            ret += np.dot(state, next_state)
+        ret += np.dot(np.dot(self.weights[0], x), activations[0])
 
-        activations = rho(self.state)
+        return ret
 
-        # TODO: #5 compute product of activations with weights (refer to original code)
-
-        return magnitudes
 
     def energy_grad_state(self, x):
         """
